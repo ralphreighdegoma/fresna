@@ -13,15 +13,32 @@ return new class extends Migration
     {
         Schema::create('contacts', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id'); // Reference to the user who owns the contact
-            $table->string('name'); // Contact's name
-            $table->string('email'); // Contact's email address
-            $table->string('phone')->nullable(); // Contact's phone number (optional)
-            $table->string('company')->nullable(); // Company name (optional)
+            $table->unsignedBigInteger('user_id');
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('email');
+            $table->string('mobile_number')->nullable();
+            $table->string('work_number')->nullable();
+            $table->string('organisation_name');
+            $table->string('photo')->nullable();
+            $table->string('asic_code');
+            $table->string('suburb');
+            $table->string('post_code');
+            $table->string('state');
+            $table->string('region');
+            $table->string('status')->default('active');
+            $table->boolean('indigenous_organization')->nullable();
+            $table->string('company_structure');
+            $table->string('organisation_type');
+            $table->unsignedBigInteger('business_advisor_id')->nullable();
+            $table->unsignedBigInteger('program_type_id')->nullable();
+            $table->unsignedBigInteger('course_id')->nullable();
+            $table->unsignedBigInteger('resource_id')->nullable();
+            $table->string('level_access');
+            $table->boolean('referred')->nullable();
+            $table->string('refer_name')->nullable();
+            $table->string('refer_organisation')->nullable();
             $table->timestamps();
-
-            // Foreign key constraint linking the contact to the user
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
