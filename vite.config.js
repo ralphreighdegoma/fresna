@@ -11,13 +11,4 @@ export default defineConfig({
             ],
         }),
     ],
-    server: {
-        proxy: {
-            '/resources/css': {
-                target: 'http://13.239.24.219/',
-                changeOrigin: true,
-                secure: false,
-            },
-        },
-    },
 })
