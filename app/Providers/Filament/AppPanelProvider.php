@@ -20,6 +20,8 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
 use Filament\Navigation\MenuItem;
 use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
+use App\Filament\Pages\Auth\LoginPage;
+use App\Filament\Pages\Auth\RegisterPage;
 
 class AppPanelProvider extends PanelProvider
 {
@@ -29,6 +31,7 @@ class AppPanelProvider extends PanelProvider
             ->default()
             ->id('app')
             ->path('app')
+            ->brandLogo(fn () => view('brand-logo'))
             ->plugins([
                 FilamentEditProfilePlugin::make()
                     ->slug('my-profile')
@@ -51,7 +54,6 @@ class AppPanelProvider extends PanelProvider
                         return true;
                     }),
             ])
-            ->login()
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -66,6 +68,8 @@ class AppPanelProvider extends PanelProvider
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
             ])
+            ->login(LoginPage::class)
+            ->registration(RegisterPage::class)
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

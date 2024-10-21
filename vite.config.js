@@ -11,4 +11,20 @@ export default defineConfig({
             ],
         }),
     ],
+    server: {
+        proxy: {
+          '/resources/css': {
+            target: 'http://3.107.167.23:9090',
+            changeOrigin: true,
+            secure: false,
+          },
+        },
+      },
+
+    server: { 
+        https: false,
+        host: true,
+        port: 5173,
+        hmr: {host: 'localhost', protocol: 'ws'},
+    }, 
 })
