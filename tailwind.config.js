@@ -7,4 +7,13 @@ export default {
         './resources/views/filament/**/*.blade.php',
         './vendor/filament/**/*.blade.php',
     ],
+    theme: {
+        extend: {
+            colors: {
+                sidebar: {
+                    DEFAULT: '#1f2937', // your custom sidebar color (e.g., dark gray)
+                },
+            },
+        },
+    },
 }

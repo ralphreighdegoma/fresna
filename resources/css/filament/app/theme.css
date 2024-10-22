@@ -1,6 +1,5 @@
-@import '/vendor/filament/filament/resources/css/theme.css';
-@config 'tailwind.config.js';
-.fi-simple-main {
-    width: 600px !important;
-    max-width: 100% !important;
-}
+    @import '/vendor/filament/filament/resources/css/theme.css';
+    @config 'tailwind.config.js';
+    .fi-sidebar-item {
+        row-gap: 0.78rem !important;
+    }
