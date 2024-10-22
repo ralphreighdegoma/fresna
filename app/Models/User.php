@@ -50,6 +50,12 @@ class User extends Authenticatable
 
     protected function avatarUrl(): Attribute
     {
+        if(empty($value)) {
+            return Attribute::make(
+                get: fn () => "/assets/images/placeholder.jpg",
+            );
+        }
+
         return Attribute::make(
             get: fn (string $value) => asset('storage/' . $value),
         );
