@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('referrals', function (Blueprint $table) {
             $table->id();
-            $table->enum('status', ['draft', 'submitted', 'approved'])->default('draft');
+            $table->string('status')->default('draft');
             $table->string('title');
             $table->foreignId('client_id')->constrained('users');
             $table->string('organisation');
