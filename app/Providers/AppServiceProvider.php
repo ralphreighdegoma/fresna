@@ -24,9 +24,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
          
-        FilamentView::registerRenderHook(
-            PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
-            fn (): string => Blade::render('filament.login_extra'),
-        );
+        // FilamentView::registerRenderHook(
+        //     PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
+        //     fn (): string => Blade::render('filament.login_extra'),
+        // );
     }
 }

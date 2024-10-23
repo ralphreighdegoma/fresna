@@ -97,9 +97,9 @@ class TaskResource extends Resource
 
     public static function table(Table $table): Table
     {
+        
         return $table
             ->columns([
-
                 TextColumn::make('id')
                     ->label('Task Number')
                     ->grow(false)
@@ -108,7 +108,7 @@ class TaskResource extends Resource
                 TextColumn::make('mini_description')->width('30%')->grow(),
                 ImageColumn::make('user.avatar_url')
                     ->label('Avatar')
-                    ->disk('s3')
+                    ->disk('public')
                     ->defaultImageUrl(url('/assets/images/placeholder.jpg'))
                     ->grow(false)
                     ->circular(),

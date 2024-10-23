@@ -55,16 +55,18 @@ class User extends Authenticatable implements FilamentUser
         ];
     }
 
-    protected function avatarUrl(): Attribute
+    protected function avatar_url(): Attribute
     {
-        if(empty($value)) {
+        dd($this->avatar_url);
+
+        if(empty($this->avatar_url) || $this->avatar_url == null || $this->avatar_url == "") {
             return Attribute::make(
                 get: fn () => "/assets/images/placeholder.jpg",
             );
         }
 
         return Attribute::make(
-            get: fn (string $value) => asset('storage/' . $value),
+            get: fn () => asset('storage/' . $this->avatar_url),
         );
     }
 }

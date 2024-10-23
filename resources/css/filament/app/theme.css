@@ -3,3 +3,8 @@
     .fi-sidebar-item {
         row-gap: 0.78rem !important;
     }
+    
+    .fi-ac-btn-action {
+        height: 50px !important;
+        width: 143.1px !important;
+    }

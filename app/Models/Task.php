@@ -42,13 +42,9 @@ class Task extends Model
 
   protected function miniDescription(): Attribute
     {
-        // return Attribute::make(
-        //     get: fn (string $value) => asset('storage/' . $value),
-        // );
-
-        //cut the description
         return Attribute::make(
             get: fn () => substr($this->description, 0, 60)."...",
         );
     }
+
 }
