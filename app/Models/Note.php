@@ -7,13 +7,13 @@ use Illuminate\Support\Facades\Auth;
 
 class Note extends Model
 {
-  protected $fillable = [
-    'title',
-    'content',
-    'user_id'
-  ];
+    protected $fillable = [
+        'title',
+        'content',
+        'user_id'
+    ];
 
-  protected static function boot()
+    protected static function boot()
     {
         parent::boot();
 

@@ -40,6 +40,8 @@ class ContactResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = 'Contacts';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -58,52 +60,52 @@ class ContactResource extends Resource
                               ->required()
                               ->maxLength(255)
                               ->label('First Name'),
-                              
+
                               TextInput::make('last_name')
                               ->required()
                               ->maxLength(255)
                               ->label('Last Name'),
-          
+
                               TextInput::make('email')
                               ->required()
                               ->maxLength(255)
                               ->email()
                               ->label('Email Address'),
-          
+
                               TextInput::make('mobile_number')
                               ->required()
                               ->maxLength(255)
                               ->label('Mobile Number'),
-          
+
                               TextInput::make('work_number')
                               ->required()
                               ->maxLength(255)
                               ->label('Work Number'),
-          
+
                               TextInput::make('organisation_name')
                               ->required()
                               ->maxLength(255)
                               ->label('Organisation Name'),
-          
+
                               FileUpload::make('photo')
                               ->image()
                               ->label('Photo Upload (Optional)'),
                             ]),
-                            
+
                             // Column 2
                             Group::make() // Group for Column 2
                             ->schema([
-          
+
                               TextInput::make('asic_code')
                               ->required()
                               ->maxLength(255)
                               ->label('ASIC Code'),
-                              
+
                               TextInput::make('suburb')
                                   ->required()
                                   ->maxLength(255)
                                   ->label('Suburb'),
-          
+
                               Grid::make(['default' => 2]) // Create a grid with two columns
                               ->schema([
                                   Group::make() // Group for Column 1
@@ -113,7 +115,7 @@ class ContactResource extends Resource
                                     ->maxLength(255)
                                     ->label('Postcode'),
                                   ]),
-          
+
                                   Group::make() // Group for Column 1
                                   ->schema([
                                     TextInput::make('state')
@@ -122,14 +124,14 @@ class ContactResource extends Resource
                                     ->label('State'),
                                   ])
                                 ]),
-          
+
                               TextInput::make('region')
                                 ->required()
                                 ->maxLength(255)
                                 ->label('Region'),
-          
-                              
-          
+
+
+
                               Select::make('company_structure')
                               ->label('Company Structure')
                               ->options([
@@ -137,7 +139,7 @@ class ContactResource extends Resource
                               ])
                               ->default('sole_trader')
                               ->required(),
-          
+
                               Select::make('organisation_type')
                               ->label('Organisation Type')
                               ->options([
@@ -146,12 +148,12 @@ class ContactResource extends Resource
                               ])
                               ->default('tourism')
                               ->required(),
-          
+
                               Checkbox::make('indigenous_organization')
                                 ->inline()
                                 ->default(false)
                                 ->label('Indigenous Organisation (Must be 5% indigenous owned)'),
-          
+
                               Select::make('status')
                               ->label('Status')
                               ->options([
@@ -161,7 +163,7 @@ class ContactResource extends Resource
                               ])
                               ->default('active')
                               ->required(),
-          
+
                             ]),
                         ])
                       ]),
@@ -233,17 +235,17 @@ class ContactResource extends Resource
                               ->required(),
                           ])
                         ])
-                        
+
                       ]),
                   Tab::make('Notes')
                       ->schema([
-                        
+
                       ]),
                 ])
               ])
-              
 
-              
+
+
             ]);
     }
 
@@ -269,7 +271,7 @@ class ContactResource extends Resource
                     default => 'N/A', // Default case if no match found
                 };
               }),
-              
+
               TextColumn::make('status')
               ->label('Status')
               ->getStateUsing(function (Contact $record) {
