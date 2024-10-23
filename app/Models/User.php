@@ -6,8 +6,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     use HasFactory, Notifiable;
 
@@ -20,7 +23,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar_url',
     ];
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -31,6 +36,11 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return true;
+    }
 
     /**
      * Get the attributes that should be cast.
@@ -43,5 +53,18 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    protected function avatarUrl(): Attribute
+    {
+        if(empty($value)) {
+            return Attribute::make(
+                get: fn () => "/assets/images/placeholder.jpg",
+            );
+        }
+
+        return Attribute::make(
+            get: fn (string $value) => asset('storage/' . $value),
+        );
     }
 }

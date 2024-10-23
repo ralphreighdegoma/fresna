@@ -9,4 +9,7 @@ class Message extends Page
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static string $view = 'filament.pages.message';
+
+    //hide in navigation
+    protected static bool $shouldRegisterNavigation = false;
 }

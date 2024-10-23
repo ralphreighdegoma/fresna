@@ -1,5 +1,5 @@
 services:
-    myapp-laravel.test:  # Changed from laravel.test to myapp-laravel.test
+    laravel.test:  # Changed from laravel.test to myapp-laravel.test
         build:
             context: './vendor/laravel/sail/runtimes/8.3'
             dockerfile: Dockerfile
@@ -10,7 +10,7 @@ services:
             - 'host.docker.internal:host-gateway'
         ports:
             - '${APP_PORT:-80}:80'  # Ensure APP_PORT is different for each instance
-            - '${VITE_PORT:-5174}:${VITE_PORT:-5173}'  # Ensure VITE_PORT is different for each instance
+            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'  # Ensure VITE_PORT is different for each instance
         environment:
             WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1
@@ -22,9 +22,9 @@ services:
         networks:
             - sail
         depends_on:
-            - myapp-mysql  # Changed from mysql to myapp-mysql
+            - mysql  # Changed from mysql to myapp-mysql
 
-    myapp-mysql:  # Changed from mysql to myapp-mysql
+    mysql:  # Changed from mysql to myapp-mysql
         image: 'mysql/mysql-server:8.0'
         ports:
             - '${FORWARD_DB_PORT:-3307}:3306'  # Ensure FORWARD_DB_PORT is different for each instance

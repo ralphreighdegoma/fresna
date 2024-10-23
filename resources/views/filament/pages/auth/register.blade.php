@@ -21,4 +21,10 @@
 
         {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::AUTH_REGISTER_FORM_AFTER, scopes: $this->getRenderHookScopes()) }}
     </x-filament-panels::page.simple>
+    <style>
+        .fi-simple-main {
+            width: 900px !important;
+            max-width: 100% !important;
+        }
+        </style>
 </div>
