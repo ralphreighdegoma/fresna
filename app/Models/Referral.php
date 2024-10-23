@@ -16,7 +16,13 @@ class Referral extends Model
         'expected_outcome',
         'referred_to_id',
         'max_hours',
-        'max_cost'
+        'max_cost',
+        'business_advisor_id',
+        'approver_id',
+        'comment',
+        'member_feedback',
+        'total_rating',
+        'rating_average_score'
     ];
 
     public function client()
