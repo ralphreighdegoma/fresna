@@ -13,6 +13,10 @@ class Note extends Model
         'user_id'
     ];
 
+    protected $casts = [
+    'attachments' => 'array',
+    ];
+
     protected static function boot()
     {
         parent::boot();
@@ -21,5 +25,10 @@ class Note extends Model
         static::creating(function ($note) {
             $note->user_id = Auth::id(); // Set the current user's ID
         });
+    }
+
+    public function sharedNotes()
+    {
+        return $this->hasMany(SharedNote::class);
     }
 }

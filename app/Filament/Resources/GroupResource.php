@@ -117,10 +117,7 @@ class GroupResource extends Resource
                                         ->searchable(),
                                     ])
                                     ->defaultItems(0)
-                                    ->addActionLabel('Add member')
-                                    ->rules([
-                                        'groupMembers.*.user_id' => 'distinct', // Ensures unique user_id
-                                    ])
+                                    ->addActionLabel('Add member'),
                                 ]),
                             ])
                         ])

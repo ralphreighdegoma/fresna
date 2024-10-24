@@ -31,6 +31,7 @@ use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Get;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
+use App\Models\User;
 
 class NoteResource extends Resource
 {
@@ -45,29 +46,60 @@ class NoteResource extends Resource
         return $form
             ->schema([
               Grid::make(['default' => 1])->Schema([
-                TextInput::make('title')
-                ->required()
-                ->maxLength(255)
-                ->label('Title'),
+                Tabs::make('Tabs')
+                ->schema([
+                    Tab::make('Setup')
+                    ->schema([
+                        TextInput::make('title')
+                        ->required()
+                        ->maxLength(255)
+                        ->label('Title'),
 
-                MarkdownEditor::make('content')
-                ->label('Content')
-                ->toolbarButtons([
-                    'blockquote',
-                    'bold',
-                    'bulletList',
-                    'codeBlock',
-                    'h2',
-                    'h3',
-                    'italic',
-                    'link',
-                    'orderedList',
-                    'redo',
-                    'strike',
-                    'underline',
-                    'undo',
+                        MarkdownEditor::make('content')
+                        ->label('Content')
+                        ->toolbarButtons([
+                            'blockquote',
+                            'bold',
+                            'bulletList',
+                            'codeBlock',
+                            'h2',
+                            'h3',
+                            'italic',
+                            'link',
+                            'orderedList',
+                            'redo',
+                            'strike',
+                            'underline',
+                            'undo',
+                        ])
+                        ->required(),
+
+                        FileUpload::make('attachments')
+                        ->multiple(),
+                        ]),
+
+                    Tab::make('Share with')
+                    ->schema([
+                        Grid::make(columns: ['default' => 2])
+                        ->schema([
+                            Group::make()
+                            ->schema([
+                                Repeater::make('sharedNotes')
+                                ->relationship('sharedNotes')
+                                ->schema([
+                                    Select::make('user_id')
+                                    ->label('User')
+                                    ->required()
+                                    ->options(User::all()->pluck('name', 'id'))
+                                    ->searchable(),
+                                ])
+                                ->defaultItems(0)
+                                ->addActionLabel('Add member'),
+                            ]),
+                        ])
+                    ])
                 ])
-                ->required()
+
               ])
             ]);
     }
