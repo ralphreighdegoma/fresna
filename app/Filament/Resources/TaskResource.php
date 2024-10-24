@@ -29,6 +29,10 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Checkbox;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\ImageColumn;
+use Illuminate\Support\Facades\Auth;
+use Filament\Forms\Components\Actions;
+use Filament\Forms\Components\Actions\Action;
+
 //import Storage
 use Illuminate\Support\Facades\Storage;
 
@@ -46,6 +50,8 @@ class TaskResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $user_id = Auth::id();
+
         return $form
             ->schema([
                 Grid::make(1) // Create a 2-column grid
@@ -90,6 +96,47 @@ class TaskResource extends Resource
                             ])
                             ->default('disable')
                             ->required(),
+
+                            Repeater::make('comments')
+                            ->label('Comments')
+                            ->relationship('comments') // This links to the comments relationship
+                            ->schema([
+                              TextInput::make('content')
+                            //   ->label('Comment Content')
+                              ->label(fn ($record) => $record?->user?->name ?? 'Comment')
+                              ->disabled() // Make it read-only when editing existing comments
+                              ->visible(fn ($record, $get) => !$get('is_editing')), // Only show as text if the comment is already saved
+
+
+                              Checkbox::make('is_editing')
+                              ->label('Edit Comment')
+                              ->default(fn ($record) => $record?->is_editing ?? true)
+                              ->live()
+                              ->visible(fn ($record, $get) => $record !== null && $record->user_id == $user_id),
+
+                              // Show MarkdownEditor for new comments
+                              MarkdownEditor::make('content')
+                              ->label('Comment Content')
+                              ->toolbarButtons([
+                                  'blockquote',
+                                  'bold',
+                                  'bulletList',
+                                  'codeBlock',
+                                  'h2',
+                                  'h3',
+                                  'italic',
+                                  'link',
+                                  'orderedList',
+                                  'redo',
+                                  'strike',
+                                  'underline',
+                                  'undo',
+                              ])
+                              ->required()
+                              ->visible(fn ($record, $get) => $get('is_editing') || $record === null), // Only show MarkdownEditor for new comments
+                            ])
+                            ->createItemButtonLabel('Add Comment')
+                            // ->disableItemDeletion()
 
                     ]),
             ]);
