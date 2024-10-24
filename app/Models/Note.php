@@ -29,6 +29,6 @@ class Note extends Model
 
     public function sharedNotes()
     {
-        return $this->hasMany(SharedNote::class);
+        return $this->hasMany(SharedNote::class, 'time_sheet_id');
     }
 }
