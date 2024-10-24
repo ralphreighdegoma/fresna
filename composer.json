@@ -7,13 +7,14 @@
     "require": {
         "php": "^8.2",
         "chillerlan/php-qrcode": "^5.0",
+        "fakerphp/faker": "^1.23",
         "filament/filament": "^3.2",
         "filament/forms": "^3.2",
         "jiten14/jitone-ai": "^0.1.5",
         "joaopaulolndev/filament-edit-profile": "^1.0",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
-        "fakerphp/faker": "^1.23",
+        "league/flysystem-aws-s3-v3": "^3.29",
         "ysfkaya/filament-phone-input": "^3.1"
     },
     "require-dev": {
