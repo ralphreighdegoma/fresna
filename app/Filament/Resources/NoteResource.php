@@ -115,14 +115,14 @@ class NoteResource extends Resource
               TextColumn::make('title')
               ->label('Title'),
 
-              TextColumn::make('content')
+              TextColumn::make('mini_content')
               ->label('Content'),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                // Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make(),
             ])
             // ->contentGrid(function ($record) {
             //     return view('components.note-card', [

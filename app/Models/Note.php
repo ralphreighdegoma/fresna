@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Carbon\Carbon;
 class Note extends Model
 {
     protected $fillable = [
@@ -14,7 +15,12 @@ class Note extends Model
     ];
 
     protected $casts = [
-    'attachments' => 'array',
+        'attachments' => 'array',
+    ];
+
+    protected $appends = [
+        'mini_content',
+        'readable_created_at',
     ];
 
     protected static function boot()
@@ -30,5 +36,27 @@ class Note extends Model
     public function sharedNotes()
     {
         return $this->hasMany(SharedNote::class, 'note_id');
+    }
+
+    protected function miniContent(): Attribute
+    {
+        // return Attribute::make(
+        //     get: fn (string $value) => asset('storage/' . $value),
+        // );
+
+        //cut the description
+        return Attribute::make(
+            get: fn () => substr($this->content, 0, 60)."...",
+        );
+    }
+
+    protected function getReadableCreatedAtAttribute(): string
+    {
+        // return Attribute::make(
+        //     get: fn (string $value) => asset('storage/' . $value),
+        // );
+
+        //cut the description
+        return Carbon::parse($this->created_at)->diffForHumans();
     }
 }
