@@ -108,6 +108,10 @@ class NoteResource extends Resource
     {
         return $table
             ->columns([
+                // TextColumn::make('custom_view')
+                // ->label('Note')
+                // ->view('components.note-card')
+                // ->width('30%')
               TextColumn::make('title')
               ->label('Title'),
 
@@ -118,8 +122,13 @@ class NoteResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                // Tables\Actions\EditAction::make(),
             ])
+            // ->contentGrid(function ($record) {
+            //     return view('components.note-card', [
+            //         'note' => $record
+            //     ]);
+            // })
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
