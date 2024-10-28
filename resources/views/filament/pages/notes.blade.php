@@ -8,8 +8,9 @@
                 @foreach ($notes as $noteItem)
                     <li class="mb-2">
                         <div
-                            class="bg-white p-4 shadow rounded cursor-pointer hover:bg-gray-50"
+                            class="p-4 shadow rounded cursor-pointer"
                             x-on:click="selectedNote = {{ json_encode($noteItem) }}; isEditing = false"
+                            :class="selectedNote.id == {{ $noteItem['id'] }} ? 'bg-blue-300 text-black' : 'bg-white hover:bg-gray-300 text-black'"
                         >
                             <h4 class="font-bold">{{ $noteItem['title'] }}</h4>
                             <p class="text-sm text-gray-500">{{ $noteItem['readable_created_at'] }}</p>
@@ -21,10 +22,9 @@
         </div>
 
         <!-- Main Content for Selected Note -->
-        <div class="col-span-2 bg-white p-8 shadow rounded">
+        <div class="col-span-2 bg-white p-8 shadow rounded relative">
             <template x-if="selectedNote">
-                <div class="grid grid-cols-3 gap-6">
-
+                <div class="grid grid-cols-3 gap-6 ">
                     <!-- Content Display and Edit Form -->
                     <div class="col-span-2">
                         <template x-if="!isEditing">
@@ -36,74 +36,72 @@
                         </template>
 
                         <template x-if="isEditing">
-                            <div>
-                                <!-- Title Input -->
-                                <label class="block text-gray-700 mb-2">Title</label>
-                                <input type="text" x-model="selectedNote.title" class="w-full p-2 border rounded mb-4" />
+                            <!-- Form for Updating the Note -->
+                            <form wire:submit.prevent="saveNote(selectedNote)">
+                                <div class="mb-2">
+                                    <x-filament::input.wrapper>
+                                        <x-filament::input
+                                            label="Title"
+                                            name="title"
+                                            x-model="selectedNote.title"
+                                            class="w-full p-2 border rounded" />
+                                    </x-filament::input.wrapper>
+                                </div>
 
-                                <!-- Content Markdown Editor -->
-                                <label class="block text-gray-700 mb-2">Content</label>
-                                <textarea x-model="selectedNote.content" class="w-full p-2 border rounded h-32"></textarea>
-                            </div>
+                                <div class="mb-2">
+                                    <textarea
+                                        name="content"
+                                        id="content"
+                                        x-model="selectedNote.content"
+                                        rows="6"
+                                        class="w-full p-2 border rounded"></textarea>
+                                </div>
+                                <!-- Save Button -->
+                                <button type="submit" class="bg-purple-500 text-white py-2 px-4 rounded mt-4">Save</button>
+                                <button type="button" class="bg-yellow-500 text-white py-2 px-4 rounded mt-4" x-on:click="isEditing = false">Cancel</button>
+                            </form>
                         </template>
 
+
+                    </div>
+                    <div class="col-span-1">
+                        <!-- Form Section with Edit Button -->
+                        <template x-if="!isEditing">
+                            <button type="button"
+                                    x-on:click="isEditing = !isEditing"
+                                    class="bg-purple-500 text-white py-1 px-2 rounded mb-2 absolute top-0 right-0">
+                                <span>Edit Contents</span>
+                            </button>
+                        </template>
+                        <!-- Set Reminder -->
+                        <div class="mb-4" x-show="selectedNote.attachments && selectedNote.attachments.length" x-show="isEditing">
+                            <h4 class="font-semibold text-lg mb-2">Set Reminder</h4>
+                            <x-filament::input.wrapper>
+                                <x-filament::input
+                                    label="Date"
+                                    type="date"
+                                    name="reminder_date"
+                                    x-model="selectedNote.reminder_date"
+                                    class="w-full p-1 border rounded" />
+                            </x-filament::input.wrapper>
+                        </div>
                         <!-- Attachments -->
-                        <div x-show="selectedNote.attachments && selectedNote.attachments.length" class="mt-6">
+                        <div x-show="selectedNote.attachments && selectedNote.attachments.length">
                             <h4 class="font-semibold text-lg mb-2">Attachments</h4>
-                            <ul class="flex space-x-4">
-                                <template x-for="attachment in selectedNote.attachments" :key="attachment.id">
+                            <ul class="flex space-x-4 truncate">
+                                <template x-for="attachment in selectedNote.attachments" :key="attachment">
                                     <li>
-                                        <a :href="attachment.url" class="text-blue-600 underline" x-text="attachment.filename"></a>
+                                        <a :href="attachment" class="text-blue-600 underline " x-text="attachment.substring(0, 10) + '...'"></a>
                                     </li>
                                 </template>
                             </ul>
+                            <template x-if="isEditing">
+                                <button type="button"
+                                        class="bg-gray-500 text-white py-0 px-1 rounded mt-2 mb-2">
+                                    <span>Add attachments</span>
+                                </button>
+                            </template>
                         </div>
-                    </div>
-
-                    <!-- Form Section with Edit Button -->
-                    <div class="col-span-1">
-                        <form>
-                            <!-- Toggle Editing Mode -->
-                            <button type="button"
-                                    x-on:click="isEditing = !isEditing"
-                                    class="bg-purple-500 text-white py-2 px-4 rounded mb-4">
-                                <span x-text="isEditing ? 'Save' : 'Edit Contents'"></span>
-                            </button>
-
-                            <!-- Other Form Fields -->
-                            <!-- Reminder Date -->
-                            <div class="mb-4">
-                                <label class="block text-gray-700">Set Reminder</label>
-                                <input type="date" class="border rounded w-full py-2 px-3 text-gray-700">
-                            </div>
-
-                            <!-- Shared With -->
-                            <div class="mb-4">
-                                <label class="block text-gray-700">Shared with</label>
-                                <select class="border rounded w-full py-2 px-3 text-gray-700 mb-2">
-                                    <option>Select a user</option>
-                                </select>
-                                <div class="bg-gray-200 py-2 px-3 rounded mb-2">Firstname Lastname <span class="text-gray-500">x</span></div>
-                            </div>
-
-                            <!-- Attachments -->
-                            <div class="mb-4">
-                                <label class="block text-gray-700">Attachments</label>
-                                <ul class="list-none mb-4">
-                                    <li><a href="#" class="text-blue-600 underline">task_link.pdf</a></li>
-                                </ul>
-                                <button type="button" class="border rounded py-2 px-4 text-gray-700">Add attachments</button>
-                            </div>
-
-                            <!-- Link Resource -->
-                            <div class="mb-4">
-                                <label class="block text-gray-700">Link Resource</label>
-                                <ul class="list-none mb-4">
-                                    <li><a href="#" class="text-blue-600 underline">Resource_1.pdf</a></li>
-                                </ul>
-                                <button type="button" class="border rounded py-2 px-4 text-gray-700">Link Resource</button>
-                            </div>
-                        </form>
                     </div>
                 </div>
             </template>

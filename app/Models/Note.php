@@ -11,7 +11,8 @@ class Note extends Model
     protected $fillable = [
         'title',
         'content',
-        'user_id'
+        'user_id',
+        'attachments'
     ];
 
     protected $casts = [
@@ -58,5 +59,14 @@ class Note extends Model
 
         //cut the description
         return Carbon::parse($this->created_at)->diffForHumans();
+    }
+
+    // Method to add attachments
+    public function addAttachment($filePath)
+    {
+        $attachments = $this->attachments ?: [];
+        $attachments[] = $filePath; // Append the new file path
+        $this->attachments = $attachments;
+        $this->save(); // Save the model
     }
 }

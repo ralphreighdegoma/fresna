@@ -12,14 +12,23 @@ class Notes extends Page
     protected static string $view = 'filament.pages.notes';
 
     protected static ?string $slug = 'my-notes';
-    public array $notes = [];
+    public $notes = [];
 
-    public array $selectedNote;
+    public $selectedNote;
 
     // Method to initialize any properties when the page is loaded
     public function mount(): void
     {
-        $this->notes = Note::all()->toArray();
-        $this->selectedNote = count($this->notes) ? $this->notes[0] : null;
+        $this->notes = Note::all();
+        $this->selectedNote = count($this->notes) ? $this->notes[0] : [];
+    }
+
+    public function saveNote($noteData)
+    {
+        $selectedNote = Note::where('id', $noteData['id'])->first();
+        $selectedNote->title = $noteData['title'];
+        $selectedNote->content = $noteData['content'];
+        $selectedNote->save();
+        $this->selectedNote = $selectedNote;
     }
 }
