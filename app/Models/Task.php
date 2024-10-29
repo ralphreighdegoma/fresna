@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Carbon\Carbon;
 
 class Task extends Model
 {
@@ -25,9 +26,10 @@ class Task extends Model
   //APPENDS
   protected $appends = [
     'mini_description',
+    'date_created'
   ];
 
-  
+
 
   public function user()
   {
@@ -50,5 +52,15 @@ class Task extends Model
         return Attribute::make(
             get: fn () => substr($this->description, 0, 60)."...",
         );
+    }
+
+    protected function getdateCreatedAttribute(): string
+    {
+        // return Attribute::make(
+        //     get: fn (string $value) => asset('storage/' . $value),
+        // );
+
+        //cut the description
+        return Carbon::parse($this->created_at)->toFormattedDateString();
     }
 }

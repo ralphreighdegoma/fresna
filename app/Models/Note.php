@@ -34,6 +34,11 @@ class Note extends Model
         });
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function sharedNotes()
     {
         return $this->hasMany(SharedNote::class, 'note_id');
