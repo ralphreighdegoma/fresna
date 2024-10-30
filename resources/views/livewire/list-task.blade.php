@@ -1,6 +1,6 @@
 @foreach ($items as $item)
     <div class="space-y-4">
-        <div class="flex items-center text-xs">
+        <div class="flex items-center text-xs rounded-md">
             <div class="w-16 truncate text-white rounded-tl-md rounded-bl-md p-2" style="background-color: red;">
                 <span>{{$item['date_created']}}</span>
             </div>

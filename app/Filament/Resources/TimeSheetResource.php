@@ -166,7 +166,7 @@ class TimeSheetResource extends Resource
                 })
                 ->label('Category'),
 
-                TextColumn::make('comment')
+                TextColumn::make('mini_comment')
                 ->label('Comment'),
 
                 TextColumn::make('time_spent')
