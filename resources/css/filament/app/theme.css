@@ -8,3 +8,38 @@
         height: 50px !important;
         width: 143.1px !important;
     }
+    
+    .fi-sidebar-nav {
+        background-color: #171626 !important;
+    }
+    
+    .fi-sidebar-header {
+        background-color: #171626 !important;
+        height: 150px;
+        padding-bottom: 115px;
+        padding-top: 50px;
+    }
+    
+    .fi-sidebar-item-label {
+        color: #fff !important;
+        font-size: 14px !important;
+    }
+    
+    .fi-sidebar-item-active .fi-sidebar-item-label {
+        color: #d97708 !important;
+    }
+    
+    .fi-sidebar-item-label:hover {
+        color: #d97708 !important;
+    }
+    
+    @media (min-width: 1024px) {
+        .lg\:transition-none {
+            transition-property: none;
+            width: 250.1px;
+        }
+    }
+    
+    .fi-ta-text {
+        @apply py-10
+    }

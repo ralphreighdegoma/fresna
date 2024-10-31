@@ -42,7 +42,15 @@ class AppPanelProvider extends PanelProvider
                     ->setSort(10)
                     ->shouldRegisterNavigation(false)
                     ->shouldShowDeleteAccountForm(false)
-                    ->shouldShowAvatarForm()
+                    ->shouldShowAvatarForm(),
+                    \Hasnayeen\Themes\ThemesPlugin::make()
+                    ->registerTheme(
+                        [
+                            \Hasnayeen\Themes\Themes\Sunset::class,
+                        ],
+                        override: true,
+                    )
+
             ])
             ->userMenuItems([
                 'profile' => MenuItem::make()

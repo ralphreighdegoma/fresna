@@ -1,5 +1,5 @@
 <div>
     <a href="/">
-        <img src="{{ asset('assets/images/placeholder.jpg') }}" style="width: 40px;height:40px;" alt="Filament Logo">
+        <img src="{{ asset('assets/images/logo-medium.png') }}" style="width: 200px;height:auto;" alt="Filament Logo">
     </a>
 </div>

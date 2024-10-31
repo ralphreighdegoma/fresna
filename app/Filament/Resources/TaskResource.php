@@ -44,6 +44,8 @@ class TaskResource extends Resource
     //label
     protected static ?string $navigationLabel = 'My Tasks';
 
+    protected static ?int $navigationSort = 3;
+
     public static function form(Form $form): Form
     {
         return $form
@@ -66,7 +68,8 @@ class TaskResource extends Resource
                             ->label('Due date'),
 
                         FileUpload::make('attachments')
-                            ->multiple(),
+                            ->multiple()
+                            ->downloadable(),
                         // TextInput::make('attachments')
                         //   ->required()
                         //   ->label('Attachments'),
@@ -97,7 +100,7 @@ class TaskResource extends Resource
 
     public static function table(Table $table): Table
     {
-        
+
         return $table
             ->columns([
                 TextColumn::make('id')
@@ -163,7 +166,7 @@ class TaskResource extends Resource
     {
         return [
             'index' => Pages\ListTasks::route('/'),
-            // 'create' => Pages\CreateTask::route('/create'),
+            'create' => Pages\CreateTask::route('/create'),
             // 'edit' => Pages\EditTask::route('/{record}/edit'),
         ];
     }
