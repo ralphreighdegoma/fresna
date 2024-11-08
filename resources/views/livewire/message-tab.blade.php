@@ -17,12 +17,15 @@
                 <div class="flex flex-col gap-y-2">
                     @foreach ( $threads as $thread)
                         <div
-
-                            wire:click="setActiveThread({{ $thread->id }})">
+                            class="max-w-xs h-52 rounded-lg cursor-pointer border border-b-1 overflow-hidden {{isset($active_thread) && $thread->id === $active_thread->id ? 'shadow-md bg-blue-300' : ''}}"
+                            wire:click="setActiveThread({{ $thread->id }})"
+                            x-key="{{ $thread->id.'-'.isset($active_thread) ? $active_thread->id : '-' }}">
                             @livewire('message-side-holder', [
-                                'is_active' => isset($active_thread) && $thread->id === $active_thread->id,
-                                'thread' => $thread,
-                            ], key($thread->id.'-'.$active_thread->id))
+                                'name' => $thread->name,
+                                'date' => $thread->date,
+                                'message' => $thread->message,
+                                'is_active' => true
+                            ])
                         </div>
                     @endforeach
                 </div>

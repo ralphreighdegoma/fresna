@@ -6,7 +6,6 @@ use Livewire\Component;
 
 class MessageSideHolder extends Component
 {
-    public $thread;
     public $name;
     public $date;
     public $message;
@@ -19,12 +18,11 @@ class MessageSideHolder extends Component
     // }
 
 
-    public function mount($thread, $is_active)
+    public function mount($name,$date,$message,$is_active)
     {
-        $this->thread = $thread;
-        $this->name = $thread->name;
-        $this->date = $thread->date;
-        $this->message = $thread->message;
+        $this->name = $name;
+        $this->date = $date;
+        $this->message = $message;
         $this->is_active = $is_active;
     }
 

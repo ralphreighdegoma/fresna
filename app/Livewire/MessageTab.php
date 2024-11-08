@@ -33,7 +33,8 @@ class MessageTab extends Component
         $currentUserId = Auth::id(); // Get the current logged-in user's ID
         $this->currentUserId = $currentUserId;
 
-        $threads = Thread::with('participants.user')
+        $threads = Thread::where('id', intval($id))
+        ->with('participants.user')
         ->with(['messages.sender', 'messages.receiver'])
         ->with(['last_message.sender', 'last_message.receiver'])
         ->get()
