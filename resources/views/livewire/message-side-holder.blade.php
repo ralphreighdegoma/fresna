@@ -1,4 +1,4 @@
-<div class="max-w-xs h-52 rounded-lg border border-gray-300 shadow-md overflow-hidden">
+<div class="max-w-xs h-52 rounded-lg cursor-pointer border border-b-1  {{$is_active ? 'shadow-md bg-blue-300' : ''}} overflow-hidden">
     <div class="p-4 flex justify-between items-start">
         <div>
             <div class="font-bold text-gray-800">{{ $name }}</div>

@@ -41,7 +41,7 @@
     </div>
 
     <div x-show="selectedTab == 'day'">
-        <div class="grid grid-cols-8 gap-2 mt-4 text-center bg-purple-500 rounded text-white">
+        <div class="grid grid-cols-7 gap-2 mt-4 text-center bg-purple-500 rounded text-white">
             <div class="col-span-7 flex">
                 @foreach ($entries as $entry)
                 <div class="w-full p-2 bg-blue-100 rounded">

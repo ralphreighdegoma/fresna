@@ -11,5 +11,5 @@ class Message extends Page
     protected static string $view = 'filament.pages.message';
 
     //hide in navigation
-    protected static bool $shouldRegisterNavigation = false;
+    protected static bool $shouldRegisterNavigation = true;
 }

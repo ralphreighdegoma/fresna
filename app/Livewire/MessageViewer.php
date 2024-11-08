@@ -9,6 +9,12 @@ class MessageViewer extends Component
     public $senderName;
     public $date;
     public $message;
+    public $is_sender = false;
+
+    // public function mount($is_sender)
+    // {
+    //     $this->is_sender = $is_sender;
+    // }
 
     public function render()
     {
