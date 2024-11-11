@@ -1,4 +1,4 @@
-<div>
+<div x-data="{ selectedThread: {{ json_encode($active_thread) }}}">
     <div class="flex space-x-4">
         <button wire:click="setActiveTab('messages')" class="{{ $activeTab === 'messages' ? 'font-bold' : '' }}">
             Inbox
@@ -17,8 +17,9 @@
                 <div class="flex flex-col gap-y-2">
                     @foreach ( $threads as $thread)
                         <div
-                            class="max-w-xs h-52 rounded-lg cursor-pointer border border-b-1 overflow-hidden {{isset($active_thread) && $thread->id === $active_thread->id ? 'shadow-md bg-blue-300' : ''}}"
-                            wire:click="setActiveThread({{ $thread->id }})"
+                            class="max-w-xs h-52 rounded-lg cursor-pointer border border-b-1 overflow-hidden"
+                            :class="selectedThread.id == {{ $thread->id }} ? 'bg-blue-300 text-black' : 'bg-white hover:bg-gray-300 text-black'"
+                            x-on:click="selectedThread = {{ json_encode($thread) }}"
                             x-key="{{ $thread->id.'-'.isset($active_thread) ? $active_thread->id : '-' }}">
                             @livewire('message-side-holder', [
                                 'name' => $thread->name,
@@ -33,21 +34,23 @@
 
             <div class="flex-1 ml-4 flex flex-col h-full">
                 <!-- Message viewer should take up available space -->
-                <div class="flex-1 overflow-y-auto px-4">
-
-                    @if(isset($active_thread) && isset($active_thread->messages) && count($active_thread->messages) > 0)
-                        @foreach ( [$active_thread->last_message] as $message)
-                            <div class="mx-4">
-                                @livewire('message-viewer', [
-                                    'senderName' => $message->sender->name,
-                                    'date' => $message->date,
-                                    'message' => $message->body,
-                                    'is_sender' => $message->sender_id == $currentUserId
-                                ], key($active_thread->id))
+                <template x-if="selectedThread && selectedThread.last_message">
+                    <div class="flex-1 overflow-y-auto px-4" >
+                        <div class="mx-4" >
+                            <div class="border p-4 rounded-lg">
+                                <div class="mb-2">
+                                    <strong x-text="selectedThread.last_message.sender.name"></strong>
+                                    <span class="text-gray-500" x-text="selectedThread.last_message.date"></span>
+                                </div>
+                                <div>
+                                    <p x-text="selectedThread.last_message.body"></p>
+                                </div>
                             </div>
-                        @endforeach
-                    @endif
-                </div>
+                        </div>
+                    </div>
+                </template>
+
+
 
                 <!-- Reply box always stays at the bottom -->
                 <div class="mt-auto">
