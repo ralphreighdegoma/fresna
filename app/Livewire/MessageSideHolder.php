@@ -18,12 +18,11 @@ class MessageSideHolder extends Component
     // }
 
 
-    public function mount($name,$date,$message,$is_active)
+    public function mount($name,$date,$message)
     {
         $this->name = $name;
         $this->date = $date;
         $this->message = $message;
-        $this->is_active = $is_active;
     }
 
     public function render()

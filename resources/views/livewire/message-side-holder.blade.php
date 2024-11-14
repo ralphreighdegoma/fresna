@@ -5,10 +5,10 @@
             <div class="text-gray-500 text-sm">{{ \Carbon\Carbon::parse($date)->format('M d, Y') }}</div>
         </div>
         <div class="text-gray-400 text-sm">
-            {{ \Carbon\Carbon::parse($date)->format('h:i A') }}
+            {{ \Carbon\Carbon::parse($date)->format('m/d/Y h:i A') }}
         </div>
     </div>
     <div class="px-4 pb-4">
-        <div class="text-gray-700 truncate" style="max-height: 3.5em; overflow: hidden;">{{ $message }}</div>
+        <div class="text-gray-700 truncate" style="max-height: 3.5em; overflow: hidden;" x-html="'{{ $message }}'"></div>
     </div>
 </div>

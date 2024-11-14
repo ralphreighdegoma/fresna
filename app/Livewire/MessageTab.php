@@ -7,8 +7,15 @@ use App\Models\Message;
 use App\Models\Thread;
 use Illuminate\Support\Facades\Auth;
 
-class MessageTab extends Component
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Form;
+
+class MessageTab extends Component implements HasForms
 {
+    use InteractsWithForms;
+
     public $activeTab = 'messages'; // Default active tab
     public $threads = []; // Stores the threads involving the current user
 
@@ -22,6 +29,16 @@ class MessageTab extends Component
     public function mount()
     {
         $this->loadThreads();
+    }
+
+    public function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                RichEditor::make('message')
+                ->label('')
+            ]);
+
     }
 
     public function setActiveTab($tab)
@@ -70,7 +87,7 @@ class MessageTab extends Component
         ->map(function($message) use ($currentUserId) {
             $message->name = $message->sender->name;
             $message->message = $message->body;
-            $message->date = \Carbon\Carbon::parse($message->created_at)->format('h:i A');
+            $message->date = \Carbon\Carbon::parse($message->created_at)->format('m/d/Y h:i A');
             // $message->last_message = $message;
             return $message;
         });
@@ -123,5 +140,6 @@ class MessageTab extends Component
         ]);
         // Reset the message input after sending
         $this->message = '';
+        $this->loadThreads();
     }
 }
