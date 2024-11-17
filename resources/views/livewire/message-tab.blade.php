@@ -1,5 +1,6 @@
 
-<div x-data="{ selectedThread: {{ $active_thread ? json_encode($active_thread) : null }}, message: @entangle('message')}">
+<div
+  x-data="{ selectedThread: @entangle('selectedThread'), message: @entangle('message'), currentUserId: @entangle('currentUserId'), threads: @entangle('threads')}">
     <div class="flex space-x-4">
         <button wire:click="setActiveTab('messages')" class="{{ $activeTab === 'messages' ? 'font-bold' : '' }}">
             Inbox
@@ -16,48 +17,67 @@
                 New Message
             </button>
         </div>
-        <div class="p-4 border rounded flex h-screen gap-x-2">
+        <div class="p-4 flex h-screen gap-x-2">
             <div class="flex-none" style="max-width: 300px; width: 100%; max-height: calc(100vh - 2rem); overflow-y: auto;">
                 <!-- <h2 class="text-xl">Messages</h2> -->
                 <div class="flex flex-col gap-y-2">
-                    @foreach ( $threads as $thread)
-                        <div
-                            class="max-w-xs h-52 rounded-lg cursor-pointer border border-b-1 overflow-hidden"
-                            :class="selectedThread && selectedThread.id == {{ $thread->id }} ? 'bg-blue-300 text-black' : 'bg-white hover:bg-gray-300 text-black'"
-                            x-on:click="selectedThread = {{ json_encode($thread) }}"
-                            x-key="{{ 'message-'.$thread->id}}">
-                            @livewire('message-side-holder', [
-                                'name' => $thread->name,
-                                'date' => $thread->date,
-                                'message' => $thread->message,
-                            ])
+                <template x-for="(thread) in threads">
+                    <div
+                        class="max-w-xs h-52 rounded-lg cursor-pointer border border-b-1 overflow-hidden"
+                        :class="selectedThread && selectedThread.id == thread.id ? 'bg-blue-300 text-black' : 'bg-white hover:bg-gray-300 text-black'"
+                        x-on:click="selectedThread = thread"
+                        x-key="'thread-'+thread.id'">
+                        <div>
+                            <div class="p-4 flex justify-between items-start">
+                                <div>
+                                    <div class="font-bold text-gray-800" x-text="thread.name"></div>
+                                    <div class="text-gray-500 text-sm" x-text="thread.date"></div>
+                                </div>
+                            </div>
+                            <div class="px-4 pb-4">
+                                <div class="text-gray-700 truncate" style="max-height: 3.5em; overflow: hidden;" x-html="thread.message"></div>
+                            </div>
                         </div>
-                    @endforeach
+                    </div>
+                </template>
                 </div>
             </div>
 
-            <div class="flex-1 ml-4 flex flex-col h-full">
+            <div class="ml-4 ">
                 <!-- Message viewer should take up available space -->
                 <template x-if="selectedThread">
-                    <div class="flex-1 mb-2" >
-                        <div class="h-full mx-4 " >
-                            <div class="h-full border p-4 rounded-lg">
+                    <div class="border p-4 rounded-lg" style="max-height: calc(100vh - 20rem);height: 100%; overflow-y: auto;" >
+                        <div class="mx-4">
+                            <div class="" >
                                 <div class="mb-2">
-                                    <div class="flex justify-between">
-                                        <div class="text-gray-500 mb-2" x-text="selectedThread.date"></div>
-                                        <div class="flex gap-x-2">
-                                            <button type="button" class="rounded bg-blue-300 py-1 px-2 text-white">
-                                                <i class="fa-solid fa-reply"></i> Reply
-                                            </button>
-                                            <button type="button" class="rounded bg-red-300 py-1 px-2">
-                                                <i class="fa-solid fa-trash-can"></i> Delete
-                                            </button>
+                                    <!-- <div>
+                                        <div class="flex justify-between">
+                                            <div class="text-gray-500 mb-2"></div>
+                                            <div class="flex gap-x-2">
+                                                <button type="button" class="rounded bg-blue-300 py-1 px-2 text-white">
+                                                    <i class="fa-solid fa-reply"></i> Reply
+                                                </button>
+                                                <button type="button" class="rounded bg-red-300 py-1 px-2">
+                                                    <i class="fa-solid fa-trash-can"></i> Delete
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <strong x-text="selectedThread.sender.name"></strong>
-                                </div>
-                                <div>
-                                    <p x-html="selectedThread.body"></p>
+                                    </div> -->
+                                    <template x-for="(message_r, index) in selectedThread.messages">
+                                        <div class="flex" :class="message_r.sender_id == currentUserId ? 'justify-end' : 'justify-start'">
+                                            <div class="mt-4 border rounded p-2">
+                                                <div>
+                                                    <strong x-text="message_r.sender.name"></strong>
+                                                </div>
+                                                <div>
+                                                    <p x-html="message_r.body"></p>
+                                                    <p x-text="message_r.date" class="text-gray-500 text-xs">
+
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
                                 </div>
                             </div>
                         </div>
@@ -69,7 +89,8 @@
                 <!-- Reply box always stays at the bottom -->
                 <div class="mt-auto">
                     <template x-if="selectedThread">
-                        <form wire:submit.prevent="sendMessage(selectedThread.sender_id,selectedThread.thread_id,message)">
+                        <form
+                          wire:submit.prevent="sendMessage(selectedThread.other_user_id,selectedThread.id,message)">
                             <div class="flex flex-col p-4 border rounded shadow">
                                 <div class="mb-2">
                                     {{ $this->form }}

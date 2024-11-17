@@ -19,7 +19,7 @@ class MessageTab extends Component implements HasForms
     public $activeTab = 'messages'; // Default active tab
     public $threads = []; // Stores the threads involving the current user
 
-    public $active_thread;
+    public $selectedThread;
     public $currentUserId;
 
     public $message;
@@ -65,14 +65,18 @@ class MessageTab extends Component implements HasForms
             $thread->name = $other_user[0]->user->name;
             $thread->message = isset($thread->last_message) ? $thread->last_message->body : 'Empty';
             $thread->date = $thread->created_at;
-            $thread->other_user_id = $other_user[0]->id;
+            $thread->other_user_id = $other_user[0]->user_id;
             $thread->last_message_user_id = isset($thread->last_message) ? $thread->last_message->user_id : null;
-
+            $thread->messages = $thread->messages->map(function ($message): mixed {
+                $message->date = \Carbon\Carbon::parse($message->created_at)->format('m/d/Y h:i A');
+                return $message;
+            });
             return $thread;
-        });
+        })
+        ->toArray();
 
-        if(count($threads) > 0 && $this->active_thread == null) {
-            $this->active_thread = $threads[0];
+        if(count($threads) > 0 && $this->selectedThread == null) {
+            $this->selectedThread = $threads[0];
         }
     }
 
@@ -81,40 +85,44 @@ class MessageTab extends Component implements HasForms
     {
         $currentUserId = Auth::id(); // Get the current logged-in user's ID
         $this->currentUserId = $currentUserId;
-        $this->threads = Message::where('receiver_id', $currentUserId)
-        ->with(['thread','sender', 'receiver'])
-        ->get()
-        ->map(function($message) use ($currentUserId) {
-            $message->name = $message->sender->name;
-            $message->message = $message->body;
-            $message->date = \Carbon\Carbon::parse($message->created_at)->format('m/d/Y h:i A');
-            // $message->last_message = $message;
-            return $message;
-        });
-
-        // $this->threads = Thread::whereHas('participants', function ($query) use ($currentUserId) {
-        //     $query->where('user_id', $currentUserId);
-        // })
-        // ->with('participants.user')
-        // ->with(['messages.sender', 'messages.receiver'])
-        // ->with(['last_message.sender', 'last_message.receiver'])
+        // $this->threads = Message::where('receiver_id', $currentUserId)
+        // ->with(['thread','sender', 'receiver'])
         // ->get()
-        // ->map(function ($thread) use($currentUserId) {
-        //     $other_user =  $thread->participants->filter(function ($item) use ($currentUserId) {
-        //         return $item->user_id !== $currentUserId;
-        //     })->values();
-
-        //     $thread->name = $other_user[0]->user->name;
-        //     $thread->message = isset($thread->last_message) ? $thread->last_message->body : 'Empty';
-        //     $thread->date = $thread->created_at;
-        //     $thread->other_user_id = $other_user[0]->id;
-        //     $thread->last_message_user_id = isset($thread->last_message) ? $thread->last_message->user_id : null;
-
-        //     return $thread;
+        // ->map(function($message) use ($currentUserId) {
+        //     $message->name = $message->sender->name;
+        //     $message->message = $message->body;
+        //     $message->date = \Carbon\Carbon::parse($message->created_at)->format('m/d/Y h:i A');
+        //     // $message->last_message = $message;
+        //     return $message;
         // });
 
-        if(count($this->threads) > 0 && $this->active_thread == null) {
-            $this->active_thread = $this->threads[0];
+        $this->threads = Thread::whereHas('participants', function ($query) use ($currentUserId) {
+            $query->where('user_id', $currentUserId);
+        })
+        ->with('participants.user')
+        ->with(['messages.sender', 'messages.receiver'])
+        ->with(['last_message.sender', 'last_message.receiver'])
+        ->get()
+        ->map(function ($thread) use($currentUserId) {
+            $other_user =  $thread->participants->filter(function ($item) use ($currentUserId) {
+                return $item->user_id !== $currentUserId;
+            })->values();
+
+            $thread->name = $other_user[0]->user->name;
+            $thread->message = isset($thread->last_message) ? $thread->last_message->body : 'Empty';
+            $thread->date = \Carbon\Carbon::parse($thread->created_at)->format('m/d/Y h:i A');
+            $thread->other_user_id = $other_user[0]->user_id;
+            $thread->last_message_user_id = isset($thread->last_message) ? $thread->last_message->user_id : null;
+            $thread->messages = $thread->messages->map(function ($message): mixed {
+                $message->date = \Carbon\Carbon::parse($message->created_at)->format('m/d/Y h:i A');
+                return $message;
+            });
+            return $thread;
+        })
+        ->toArray();
+
+        if(count($this->threads) > 0 && $this->selectedThread == null) {
+            $this->selectedThread = $this->threads[0];
         }
     }
 
@@ -122,7 +130,7 @@ class MessageTab extends Component implements HasForms
     {
         return view('livewire.message-tab', [
             'threads' => $this->threads,
-            'active_thread' => $this->active_thread,
+            'selectedThread' => $this->selectedThread,
         ]);
     }
 
@@ -133,13 +141,15 @@ class MessageTab extends Component implements HasForms
         // Handle sending the message logic here
         // You can also validate and process the message
         Message::create([
-            'sender_id' => $currentUserId,
-            'receiver_id' => $receiver_id,
-            'thread_id' => $thread_id,
+            'sender_id' => intval($currentUserId),
+            'receiver_id' => intval($receiver_id),
+            'thread_id' => intval($thread_id),
             'body' => $message,
         ]);
         // Reset the message input after sending
         $this->message = '';
         $this->loadThreads();
+        $this->selectedThread = null;
+        $this->setActiveThread($thread_id);
     }
 }
